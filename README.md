@@ -2,7 +2,7 @@
 # NBA sports betting database
 # Working on creating a sport betting website
 # using postgre sql for the database
-# nba api
+# nba api -- sportsdata.io
 # python
 # aws
 # more to come soon
