@@ -1,8 +1,8 @@
--- ==========================================================
--- BidderBetter Full PostgreSQL Schema
--- ==========================================================
 
--- ========== 0. API Data Tables (SportsDataIO) ==========
+-- BidderBetter Full PostgreSQL Schema
+
+
+--  API Data Tables (SportsDataIO) 
 
 -- Current Season
 CREATE TABLE IF NOT EXISTS CurrentSeason (
@@ -72,7 +72,7 @@ CREATE TABLE PlayerGameStatsByDate (
   name                    TEXT,
   team                    TEXT,
   position                TEXT,
-  started                 BOOLEAN, -- CHANGED TO INTEGER TO MATCH API
+  started                 BOOLEAN, 
   injury_status           TEXT,
   game_id                 INTEGER,
   opponent_id             INTEGER,
@@ -196,7 +196,7 @@ CREATE TABLE IF NOT EXISTS Standings (
   FOREIGN KEY(TeamID) REFERENCES Teams(TeamID)
 );
 
--- Games (final)
+-- Games 
 CREATE TABLE IF NOT EXISTS Games (
   GameID                  INTEGER PRIMARY KEY,
   Season                  INTEGER,
@@ -367,11 +367,11 @@ CREATE TABLE TeamSeasonStats (
 
 
 
--- ============= Bidder Better Schema =============================
+-- Bidder Better Schema that I developed is below. 
 
 
 
--- ========== 1. Membership Levels ==========
+-- Membership Levels 
 CREATE TABLE IF NOT EXISTS membership_levels (
     level_id       SERIAL PRIMARY KEY,
     level_name     VARCHAR(50) NOT NULL,
@@ -394,7 +394,7 @@ VALUES
 
 
 
--- ========== 2. Users ==========
+--  Users 
 CREATE TABLE IF NOT EXISTS users (
     user_id       SERIAL PRIMARY KEY,
     username      VARCHAR(50) NOT NULL UNIQUE,
@@ -418,7 +418,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 
 
--- ========== 3. Coin Transactions ==========
+-- Coin Transactions 
 CREATE TABLE IF NOT EXISTS coins (
     coin_id    SERIAL PRIMARY KEY,
     coin_value INT NOT NULL
@@ -467,7 +467,7 @@ INSERT INTO trivia_coins (question_worth) VALUES
 
 
 
--- ========== 4. XP & Leveling ==========
+-- 4. XP & Leveling
 CREATE TABLE IF NOT EXISTS user_xp_level (
     xp_level_id SERIAL PRIMARY KEY,
     xp_level    INT NOT NULL,
@@ -538,12 +538,12 @@ CREATE TABLE IF NOT EXISTS user_rank (
 
 
 
--- ========== 5. Betting System ==========
+--  5. Betting System 
 
--- ------------------------------------------------------------------------------------------ NEW CODE: 
+
 CREATE TABLE bet_types (
   bet_type_id   SERIAL PRIMARY KEY,
-  name          VARCHAR(50) UNIQUE NOT NULL  -- e.g. 'moneyline', 'spread', 'parlay'
+  name          VARCHAR(50) UNIQUE NOT NULL  -- 'moneyline', 'spread', 'parlay'
 );
 
 INSERT INTO bet_types (name) VALUES
@@ -556,7 +556,7 @@ ON CONFLICT DO NOTHING;
 
 CREATE TABLE xp_awards (
   xp_award_id   SERIAL PRIMARY KEY,
-  action        VARCHAR(50) NOT NULL,      -- e.g. 'place', 'win'
+  action        VARCHAR(50) NOT NULL,      --  'place', 'win'
   bet_type_id   INT NOT NULL REFERENCES bet_types(bet_type_id),
   xp_amount     INT NOT NULL
 );
@@ -574,7 +574,7 @@ ON CONFLICT DO NOTHING;
 
 CREATE TABLE coin_awards (
   coin_award_id SERIAL PRIMARY KEY,
-  action        VARCHAR(20) NOT NULL,           -- e.g. 'win'
+  action        VARCHAR(20) NOT NULL,           --  'win'
   bet_type_id   INT     NOT NULL REFERENCES bet_types(bet_type_id),
   coins_awarded INT     NOT NULL,
   multiplier    NUMERIC(5,2) NOT NULL DEFAULT 1
@@ -583,9 +583,9 @@ CREATE TABLE coin_awards (
 
 
 INSERT INTO coin_awards (action, bet_type_id, coins_awarded) VALUES
-  ('win', 1, 10),    -- moneyline win → 10 coins
-  ('win', 2, 15),    -- spread win → 15 coins
-  ('win', 3, 50)    -- parlay win → 50 coins
+  ('win', 1, 10),    -- moneyline win = 10 coins
+  ('win', 2, 15),    -- spread win = 15 coins
+  ('win', 3, 50)    -- parlay win = 50 coins
 
 ON CONFLICT DO NOTHING; 
 
@@ -637,7 +637,7 @@ CREATE TABLE IF NOT EXISTS bet_statistics (
 
 
 
--- ========== 6. Raffle System ==========
+-- Raffle System 
 CREATE SEQUENCE IF NOT EXISTS raffle_ticket_number_seq;
 
 CREATE TABLE IF NOT EXISTS raffle_prizes (
@@ -658,7 +658,7 @@ CREATE TABLE IF NOT EXISTS raffle_events (
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     start_time       TIMESTAMP,
     end_time         TIMESTAMP
-    -- winning_entry_id INT REFERENCES raffle_entries(raffle_entry_id) ON DELETE SET NULL
+    
 );
 
 
@@ -697,7 +697,7 @@ CREATE TABLE IF NOT EXISTS raffle_payments (
 	
 
 
--- ========== 7. Trivia System ==========
+-- Trivia System 
 CREATE TABLE IF NOT EXISTS weekly_trivia_sessions (
     weekly_trivia_id SERIAL PRIMARY KEY,
     session_start    TIMESTAMP NOT NULL,
@@ -780,7 +780,7 @@ CREATE TABLE IF NOT EXISTS trivia_participants (
 
 
 
--- ========== 8. Social Media System ==========
+-- Social Media System 
 CREATE TABLE IF NOT EXISTS social_posts (
     post_id      SERIAL PRIMARY KEY,
     user_id      INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
@@ -872,7 +872,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 
 
 
--- ========== 9. Notifications ==========
+-- Notifications
 CREATE TABLE IF NOT EXISTS notifications (
     notification_id    SERIAL PRIMARY KEY,
     notification_type  VARCHAR(50) NOT NULL,
@@ -969,7 +969,7 @@ CREATE TABLE IF NOT EXISTS notification_settings (
 
 
 
--- ========== 10. Admin Control Tables ==========
+-- Admin Control Tables 
 CREATE TABLE IF NOT EXISTS system_admin (
     system_admin_id    SERIAL PRIMARY KEY,
     user_id            INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
@@ -1024,7 +1024,7 @@ CREATE TABLE IF NOT EXISTS social_admin (
 
 
 
--- ========== 11. Disputes & Reports ==========
+-- Disputes & Reports 
 CREATE TABLE IF NOT EXISTS bet_disputes (
     dispute_id   SERIAL PRIMARY KEY,
     bet_id       INT NOT NULL REFERENCES bets(bet_id) ON DELETE CASCADE,
@@ -1061,9 +1061,8 @@ CREATE TABLE IF NOT EXISTS content_reports (
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ==========================================================
 -- End of BidderBetter Full Schema
--- ==========================================================
+
 
 
 
@@ -1279,43 +1278,43 @@ SELECT * FROM users; -- good
 SELECT * FROM users ORDER BY user_id DESC;
 
 
-SELECT * FROM trivia_questions; -- good
+SELECT * FROM trivia_questions; 
 
-SELECT * FROM weekly_trivia_sessions; -- good 
+SELECT * FROM weekly_trivia_sessions; 
 
-SELECT * FROM coins; -- good
+SELECT * FROM coins; 
 
-SELECT * FROM coin_limit; -- good
+SELECT * FROM coin_limit; 
 
-SELECT * FROM coin_awards; -- good
+SELECT * FROM coin_awards;
 
-SELECT * FROM user_xp_level; -- good
+SELECT * FROM user_xp_level; 
 
-SELECT * FROM bet_types; -- good
+SELECT * FROM bet_types; 
 
-SELECT * FROM xp_awards; -- goood
+SELECT * FROM xp_awards; 
 
-SELECT * FROM Players; -- good
+SELECT * FROM Players; 
 
-SELECT * FROM PlayerGameStatsByDate; -- bad / FIXED = good
+SELECT * FROM PlayerGameStatsByDate; 
 
-SELECT * FROM PlayerSeasonStats; -- bad /FIXED = good
+SELECT * FROM PlayerSeasonStats; 
 
-SELECT * FROM Standings; -- bad / not really needed / FIXED BUT HARD CODED - PARENT API DENIED ACCESS = good 
+SELECT * FROM Standings;
 
-SELECT * FROM Teams; -- good
+SELECT * FROM Teams;
 
-SELECT * FROM TeamGameStatsByDate; -- bad / FIXED = good
+SELECT * FROM TeamGameStatsByDate; 
 
-SELECT * FROM CurrentSeason; -- good
+SELECT * FROM CurrentSeason; 
 
-SELECT * FROM Stadiums; -- good
+SELECT * FROM Stadiums; 
 
-SELECT * FROM Games; -- good
+SELECT * FROM Games; 
 
-SELECT * FROM GameOddsByDate; -- good
+SELECT * FROM GameOddsByDate; 
 
-SELECT * FROM GamesByDate; -- good
+SELECT * FROM GamesByDate; 
 
 SELECT usename FROM pg_user;
 
@@ -1326,10 +1325,5 @@ SELECT inet_client_addr() AS your_ip;
 
 
 
--- DROP SCHEMA public CASCADE;
--- CREATE SCHEMA public;
 
 
-SELECT COUNT(*) 
-FROM information_schema.tables 
-WHERE table_schema = 'public';
